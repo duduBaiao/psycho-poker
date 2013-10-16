@@ -11,9 +11,9 @@ require.config({
         spec: '../test/spec'
     },
     shim:{
-        jquery: {
-            deps: ['underscore', 'Backbone'],
-            exports: 'jquery'
+        Backbone: {
+            deps: ['underscore', 'jquery'],
+            exports: 'Backbone'
         },
         underscore: {
             exports: '_'
@@ -28,8 +28,8 @@ require.config({
     }
 });
 
-require(['jquery', 'jasmine-html', 'spec/SpecHelper'],
-    function($, jasmine) {
+require(['jasmine-html'],
+    function(jasmine) {
     
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
@@ -40,7 +40,8 @@ require(['jquery', 'jasmine-html', 'spec/SpecHelper'],
     
     var specs = [];
     
-    specs.push('spec/PlayerSpec');
+    specs.push('spec/cardsParserSpec');
+    specs.push('spec/gameSpec');
     
     $(function(){
         require(specs, function(){
