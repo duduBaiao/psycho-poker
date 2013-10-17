@@ -3,12 +3,13 @@ define(['model/Card', 'model/CardsCollection'],
     
     describe('CardsCollection', function() {
         
-        var sortedCards =
-            (new CardsCollection([new Card("7C"),
-                                  new Card("4C"),
-                                  new Card("AC")])).sortedByNumber();
+        var cards = new CardsCollection([new Card("7C"),
+                                         new Card("4C"),
+                                         new Card("AC")]);
         
-        describe('sortedByNumber: 7C, 4C, AC -> AC, 4C, 7C', function() {
+        describe('sortedByNumber: 7C 4C AC', function() {
+            
+            var sortedCards = cards.sortedByNumber();
             
             it("A primeira carta deve ser um 'AC'", function() {
                 expect(_.first(sortedCards).code).toBe("AC");
@@ -20,6 +21,13 @@ define(['model/Card', 'model/CardsCollection'],
             
             it("A última carta deve ser um '7C'", function() {
                 expect(_.last(sortedCards).code).toBe("7C");
+            });
+        });
+        
+        describe('ranking', function() {
+            
+            it("A soma das cartas deve estar correta", function() {
+                expect(cards.cardNumbersRanking()).toBe(9);
             });
         });
     });

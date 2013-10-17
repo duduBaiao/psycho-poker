@@ -7,7 +7,7 @@ define(['Backbone', 'model/Hand', 'model/Deck'],
             this.hand = hand;
             this.deck = deck;
         },
-
+        
         bestGame: function() {
             return "straight-flush";
         }
