@@ -114,19 +114,7 @@ define(['Backbone', 'model/Card'],
         },
         
         handRanking: function() {
-            return (this.HANDS.indexOf(this.handName()) + 1) * 100;
-        },
-        
-        cardsWeightSum: function() {
-            return _.reduce(this.models,
-                            function(memo, card) {
-                                return memo += card.weight;
-                            },
-                            0);
-        },
-        
-        finalRanking: function() {
-            return this.handRanking() + this.cardsWeightSum();
+            return this.HANDS.indexOf(this.handName());
         }
     });
 

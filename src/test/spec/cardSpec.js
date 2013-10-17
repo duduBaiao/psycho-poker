@@ -20,23 +20,6 @@ define(['model/Card'],
             expect((new Card("KC")).sequence).toBe(12);
         });
         
-        it("O peso extraído do código da carta deve estar correto", function() {
-            
-            expect((new Card("2C")).weight).toBe(0);
-            expect((new Card("3C")).weight).toBe(1);
-            expect((new Card("4C")).weight).toBe(2);
-            expect((new Card("5C")).weight).toBe(3);
-            expect((new Card("6C")).weight).toBe(4);
-            expect((new Card("7C")).weight).toBe(5);
-            expect((new Card("8C")).weight).toBe(6);
-            expect((new Card("9C")).weight).toBe(7);
-            expect((new Card("TC")).weight).toBe(8);
-            expect((new Card("JC")).weight).toBe(9);
-            expect((new Card("QC")).weight).toBe(10);
-            expect((new Card("KC")).weight).toBe(11);
-            expect((new Card("AC")).weight).toBe(12);
-        });
-        
         it("O naipe extraído do código da carta deve estar correto", function() {
             
             expect((new Card("AC")).suit).toBe("C");

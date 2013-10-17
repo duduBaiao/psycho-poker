@@ -68,7 +68,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(9 * 100);
+                    expect(cards.handRanking()).toBe(8);
                 });
             });
             
@@ -85,7 +85,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(8 * 100);
+                    expect(cards.handRanking()).toBe(7);
                 });
             });
             
@@ -102,7 +102,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(7 * 100);
+                    expect(cards.handRanking()).toBe(6);
                 });
             });
             
@@ -119,7 +119,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(6 * 100);
+                    expect(cards.handRanking()).toBe(5);
                 });
             });
             
@@ -136,7 +136,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(5 * 100);
+                    expect(cards.handRanking()).toBe(4);
                 });
             });
             
@@ -153,7 +153,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(4 * 100);
+                    expect(cards.handRanking()).toBe(3);
                 });
             });
             
@@ -170,7 +170,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(3 * 100);
+                    expect(cards.handRanking()).toBe(2);
                 });
             });
             
@@ -187,7 +187,7 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(2 * 100);
+                    expect(cards.handRanking()).toBe(1);
                 });
             });
             
@@ -204,29 +204,8 @@ define(['model/Card', 'model/CardsCollection'],
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(1 * 100);
+                    expect(cards.handRanking()).toBe(0);
                 });
-            });
-        });
-        
-        describe('ranking', function() {
-            
-            var cards = new CardsCollection([new Card("AH"),
-                                             new Card("9C"),
-                                             new Card("6D"),
-                                             new Card("4S"),
-                                             new Card("2H")]);
-            
-            it("A soma dos pesos das cartas deve estar correta", function() {
-                expect(cards.cardsWeightSum()).toBe(12 + 7 + 4 + 2 + 0);
-            });
-            
-            it("O ranking da mão deve estar correto", function() {
-                expect(cards.handRanking()).toBe(100);
-            });
-            
-            it("O ranking final deve estar correto", function() {
-                expect(cards.finalRanking()).toBe(100 + 25);
             });
         });
     });
