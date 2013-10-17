@@ -3,7 +3,13 @@ define(['Backbone', 'model/Card'],
 
     var CardsCollection = Backbone.Collection.extend({
         
-        model: Card
+        model: Card,
+        
+        sortedByNumber: function() {
+            return _.sortBy(this.models, function(card){
+                        return card.number;
+                    });
+        }
     });
 
     return CardsCollection;
