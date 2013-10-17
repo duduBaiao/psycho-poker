@@ -1,14 +1,36 @@
-define(['model/Card', 'model/CardsCollection'],
-    function(Card, CardsCollection) {
+define(['model/Card', 'model/CardsCollection', 'utils/HandEvaluator'],
+    function(Card, CardsCollection, HandEvaluator) {
     
-    describe('CardsCollection', function() {
+    describe('HandEvaluator', function() {
+        
+        describe('sortedByNumber', function() {
+            
+            var noSequenceCards = new CardsCollection([new Card("7C"),
+                                                       new Card("4C"),
+                                                       new Card("AC")]);
+            
+            var sortedCards = HandEvaluator.sortedByNumber(noSequenceCards);
+            
+            it("A primeira carta deve ser um 'AC'", function() {
+                expect(_.first(sortedCards).code).toBe("AC");
+            });
+            
+            it("A segunda carta deve ser um '4C'", function() {
+                expect(sortedCards[1].code).toBe("4C");
+            });
+            
+            it("A última carta deve ser um '7C'", function() {
+                expect(_.last(sortedCards).code).toBe("7C");
+            });
+        });
         
         describe('Sequências', function() {
             
             var noSequenceCards = new CardsCollection([new Card("7C"),
                                                        new Card("4C"),
-                                                       new Card("AC")]);
-            var sortedCards = noSequenceCards.sortedByNumber();
+                                                       new Card("AC"),
+                                                       new Card("KC"),
+                                                       new Card("JC")]);
             
             var sequenceCards = new CardsCollection([new Card("KC"),
                                                      new Card("QC"),
@@ -16,29 +38,14 @@ define(['model/Card', 'model/CardsCollection'],
                                                      new Card("TC"),
                                                      new Card("9C")]);
             
-            describe('sortedByNumber', function() {
-                
-                it("A primeira carta deve ser um 'AC'", function() {
-                    expect(_.first(sortedCards).code).toBe("AC");
-                });
-                
-                it("A segunda carta deve ser um '4C'", function() {
-                    expect(sortedCards[1].code).toBe("4C");
-                });
-                
-                it("A última carta deve ser um '7C'", function() {
-                    expect(_.last(sortedCards).code).toBe("7C");
-                });
-            });
-            
             describe('isSequence', function() {
                 
                 it("As cartas não devem formar uma sequência", function() {
-                    expect(noSequenceCards.isSequence()).toBeFalsy();
+                    expect(HandEvaluator.isSequence(noSequenceCards)).toBeFalsy();
                 });
                 
                 it("As cartas devem formar uma sequência", function() {
-                    expect(sequenceCards.isSequence()).toBeTruthy();
+                    expect(HandEvaluator.isSequence(sequenceCards)).toBeTruthy();
                 });
                 
                 var royalCards = new CardsCollection([new Card("AC"),
@@ -48,7 +55,7 @@ define(['model/Card', 'model/CardsCollection'],
                                                       new Card("KC")]);
                 
                 it("Deve conseguir detectar uma sequência que termine em 'A'", function() {
-                    expect(royalCards.isSequence()).toBeTruthy();
+                    expect(HandEvaluator.isSequence(royalCards)).toBeTruthy();
                 });
             });
         });
@@ -64,11 +71,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("AH")]);
                 
                 it("As cartas devem formar um straight-flush", function() {
-                    expect(cards.handName()).toBe("straight-flush");
+                    expect(HandEvaluator.handName(cards)).toBe("straight-flush");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(8);
+                    expect(HandEvaluator.handRanking("straight-flush")).toBe(8);
                 });
             });
             
@@ -81,11 +88,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("TH")]);
                 
                 it("As cartas devem formar um four-of-a-kind", function() {
-                    expect(cards.handName()).toBe("four-of-a-kind");
+                    expect(HandEvaluator.handName(cards)).toBe("four-of-a-kind");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(7);
+                    expect(HandEvaluator.handRanking("four-of-a-kind")).toBe(7);
                 });
             });
             
@@ -98,11 +105,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("KC")]);
                 
                 it("As cartas devem formar um full-house", function() {
-                    expect(cards.handName()).toBe("full-house");
+                    expect(HandEvaluator.handName(cards)).toBe("full-house");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(6);
+                    expect(HandEvaluator.handRanking("full-house")).toBe(6);
                 });
             });
             
@@ -115,11 +122,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("2H")]);
                 
                 it("As cartas devem formar um flush", function() {
-                    expect(cards.handName()).toBe("flush");
+                    expect(HandEvaluator.handName(cards)).toBe("flush");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(5);
+                    expect(HandEvaluator.handRanking("flush")).toBe(5);
                 });
             });
             
@@ -132,11 +139,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("AH")]);
                 
                 it("As cartas devem formar um straight", function() {
-                    expect(cards.handName()).toBe("straight");
+                    expect(HandEvaluator.handName(cards)).toBe("straight");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(4);
+                    expect(HandEvaluator.handRanking("straight")).toBe(4);
                 });
             });
             
@@ -149,11 +156,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("3C")]);
                 
                 it("As cartas devem formar um three-of-a-kind", function() {
-                    expect(cards.handName()).toBe("three-of-a-kind");
+                    expect(HandEvaluator.handName(cards)).toBe("three-of-a-kind");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(3);
+                    expect(HandEvaluator.handRanking("three-of-a-kind")).toBe(3);
                 });
             });
             
@@ -166,11 +173,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("5C")]);
                 
                 it("As cartas devem formar um two-pairs", function() {
-                    expect(cards.handName()).toBe("two-pairs");
+                    expect(HandEvaluator.handName(cards)).toBe("two-pairs");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(2);
+                    expect(HandEvaluator.handRanking("two-pairs")).toBe(2);
                 });
             });
             
@@ -183,11 +190,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("2D")]);
                 
                 it("As cartas devem formar um one-pair", function() {
-                    expect(cards.handName()).toBe("one-pair");
+                    expect(HandEvaluator.handName(cards)).toBe("one-pair");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(1);
+                    expect(HandEvaluator.handRanking("one-pair")).toBe(1);
                 });
             });
             
@@ -200,11 +207,11 @@ define(['model/Card', 'model/CardsCollection'],
                                                  new Card("2H")]);
                 
                 it("As cartas devem formar um highest-card", function() {
-                    expect(cards.handName()).toBe("highest-card");
+                    expect(HandEvaluator.handName(cards)).toBe("highest-card");
                 });
                 
                 it("O ranking da mão deve estar correto", function() {
-                    expect(cards.handRanking()).toBe(0);
+                    expect(HandEvaluator.handRanking("highest-card")).toBe(0);
                 });
             });
         });

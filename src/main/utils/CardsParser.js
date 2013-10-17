@@ -1,7 +1,7 @@
 define(['Backbone', 'utils/ParsedCardsCollection', 'model/Card'],
         function(Backbone, ParsedCardsCollection, Card) {
 
-    var CardsParser = Backbone.Collection.extend({},
+    var CardsParser = Backbone.Model.extend({},
     {
         parse: function(cardsString) {
             var cardsArray = [];
