@@ -43,11 +43,7 @@ define(['Backbone', 'model/Card'],
         },
         
         suitGroups: function() {
-            var groups = _.groupBy(this.models, function(card) {return card.suit;});
-            
-            return _.map(_.keys(groups), function(key) {
-                      return {key: key, cards: groups[key]};
-                   });
+            return _.keys(_.groupBy(this.models, function(card) {return card.suit;}));
         },
         
         numberGroups: function() {
