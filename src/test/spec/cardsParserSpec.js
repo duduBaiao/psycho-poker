@@ -7,7 +7,7 @@ define(['utils/CardsParser'],
         
         var cards = CardsParser.parse(cardsString);
         
-        describe('Todas as cartas: ' + cardsString, function() {
+        describe('Todas as cartas', function() {
             
             it("Deve conseguir obter 10 cartas no total", function() {
                 
