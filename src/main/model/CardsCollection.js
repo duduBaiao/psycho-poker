@@ -69,9 +69,7 @@ define(['Backbone', 'model/Card'],
         },
         
         handName: function() {
-            var sortedCards = this.sortedByNumber();
-            
-            var isSequence = this.isSequencedCardsArray(sortedCards);
+            var isSequence = this.isSequence();
             
             var numberGroups = this.numberGroups();
             
