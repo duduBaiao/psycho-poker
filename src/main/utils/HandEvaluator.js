@@ -109,6 +109,14 @@ define(['Backbone'],
         
         handRanking: function(handName) {
             return this.HANDS.indexOf(handName);
+        },
+        
+        cardsRanking: function(cardsCollection) {
+            return this.handRanking(this.handName(cardsCollection));
+        },
+        
+        handNameForRanking: function(ranking) {
+            return this.HANDS[ranking];
         }
     });
 

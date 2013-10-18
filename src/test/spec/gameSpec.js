@@ -1,5 +1,5 @@
-define(['utils/CardsParser', 'model/Hand', 'model/Deck', 'model/Game'],
-    function(CardsParser, Hand, Deck, Game) {
+define(['utils/CardsParser', 'model/CardsCollection', 'model/Game'],
+    function(CardsParser, CardsCollection, Game) {
     
     describe('Game', function() {
         
@@ -7,8 +7,8 @@ define(['utils/CardsParser', 'model/Hand', 'model/Deck', 'model/Game'],
             
             var cards = CardsParser.parse("TH JH QC QD QS QH KH AH 2S 6S");
             
-            var hand = new Hand(cards.fromHand());
-            var deck = new Deck(cards.fromDeck());
+            var hand = new CardsCollection(cards.fromHand());
+            var deck = new CardsCollection(cards.fromDeck());
             
             var game = new Game(hand, deck);
             
