@@ -8,21 +8,44 @@ define(['Backbone', 'utils/CardsCombinator', 'utils/HandEvaluator', 'model/Cards
             this.deck = deck;
         },
         
-        bestGame: function() {
-            var bestGameRanking = 0;
+        bestHand: function() {
+            var that = this;
+            var bestRanking = -1;
+            var bestHand;
             
             var checkForBestGame = function(cardsCollection) {
-                var gameRanking = HandEvaluator.cardsRanking(cardsCollection);
+                var ranking = HandEvaluator.cardsRanking(cardsCollection);
                 
-                if (gameRanking > bestGameRanking) {
-                    bestGameRanking = gameRanking;
+                if (ranking > bestRanking) {
+                    bestRanking = ranking;
+                    bestHand = cardsCollection;
                 }
             }
             
             checkForBestGame(this.hand);
             checkForBestGame(this.deck);
             
-            return HandEvaluator.handNameForRanking(bestGameRanking);
+            for (var i=1; i < this.hand.length; i++) {
+                
+                var combinations = CardsCombinator.generate(
+                    this.hand.length - i,
+                    this.hand.length);
+                
+                _.each(combinations, function(combination) {
+                    
+                    var handCards = _.map(combination, function(cardIndex) {
+                        return that.hand.models[cardIndex];
+                    });
+                    
+                    var deckCards = that.deck.models.slice(0, i);
+                    
+                    var checkCards = handCards.concat(deckCards);
+                    
+                    checkForBestGame(new CardsCollection(checkCards));
+                });
+            }
+            
+            return bestHand;
         }
     });
 

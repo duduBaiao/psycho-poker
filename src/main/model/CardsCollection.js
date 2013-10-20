@@ -1,9 +1,13 @@
-define(['Backbone', 'model/Card'],
-        function(Backbone, Card) {
+define(['Backbone', 'model/Card', 'utils/HandEvaluator'],
+        function(Backbone, Card, HandEvaluator) {
 
     var CardsCollection = Backbone.Collection.extend({
         
-        model: Card
+        model: Card,
+        
+        name: function() {
+            return HandEvaluator.handName(this);
+        }
     });
 
     return CardsCollection;

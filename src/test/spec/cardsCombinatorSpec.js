@@ -3,36 +3,24 @@ define(['utils/CardsCombinator'],
     
     describe('CardsCombinator', function() {
         
-        it("grupos de 4 cartas devem gerar 5 combinações ", function() {
+        it("grupos de 4 cartas devem gerar 5 combinações únicas", function() {
             
-            var combinations = new Array();
-            CardsCombinator.collectCards(combinations, 4, 5);
-            
-            expect(combinations.length).toBe(5);
+            expect(CardsCombinator.generate(4, 5).length).toBe(5);
         });
         
-        it("grupos de 3 cartas devem gerar 10 combinações ", function() {
+        it("grupos de 3 cartas devem gerar 10 combinações únicas", function() {
             
-            var combinations = new Array();
-            CardsCombinator.collectCards(combinations, 3, 5);
-            
-            expect(combinations.length).toBe(10);
+            expect(CardsCombinator.generate(3, 5).length).toBe(10);
         });
         
-        it("grupos de 2 cartas devem gerar 10 combinações ", function() {
+        it("grupos de 2 cartas devem gerar 10 combinações únicas", function() {
             
-            var combinations = new Array();
-            CardsCombinator.collectCards(combinations, 2, 5);
-            
-            expect(combinations.length).toBe(10);
+            expect(CardsCombinator.generate(2, 5).length).toBe(10);
         });
         
-        it("grupos de uma carta devem gerar 5 combinações ", function() {
+        it("grupos de uma carta devem gerar 5 combinações únicas", function() {
             
-            var combinations = new Array();
-            CardsCombinator.collectCards(combinations, 1, 5);
-            
-            expect(combinations.length).toBe(5);
+            expect(CardsCombinator.generate(1, 5).length).toBe(5);
         });
     });
 });

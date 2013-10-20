@@ -14,14 +14,14 @@ define(['Backbone'],
             return true;
         },
         
-        collectCards: function(combinations,
-                               numberOfCards,
-                               totalDeck,
-                               cards,
-                               startIndex,
-                               cardsUsed) {
+        collectCombinations: function(
+            combinations,
+            numberOfCards,
+            totalDeck,
+            cards,
+            startIndex,
+            cardsUsed) {
             
-            cards = cards || new Array(numberOfCards);
             cardsUsed = cardsUsed || new Array();
             startIndex = startIndex || 0;
             
@@ -41,18 +41,31 @@ define(['Backbone'],
                         cards[startIndex] = i;
                         cardsUsed.push(i);
                         
-                        this.collectCards(combinations,
-                                          numberOfCards,
-                                          totalDeck,
-                                          cards,
-                                          startIndex + 1,
-                                          cardsUsed);
+                        this.collectCombinations(
+                            combinations,
+                            numberOfCards,
+                            totalDeck,
+                            cards,
+                            startIndex + 1,
+                            cardsUsed);
                         
                         cardsUsed.splice(cardsUsed.indexOf(i), 1);
                     }
                 }
             }
         },
+        
+        generate: function(numberOfCards, totalDeck) {
+            var combinations = new Array();
+            
+            this.collectCombinations(
+                combinations,
+                numberOfCards,
+                totalDeck,
+                new Array(numberOfCards));
+            
+            return combinations;
+        }
     });
 
     return CardsCombinator;
