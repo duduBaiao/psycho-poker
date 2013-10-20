@@ -42,6 +42,7 @@ require(['jasmine-html'],
     
     specs.push('spec/cardSpec');
     specs.push('spec/cardsParserSpec');
+    specs.push('spec/cardsCombinatorSpec');
     specs.push('spec/handEvaluatorSpec');
     specs.push('spec/gameSpec');
     
