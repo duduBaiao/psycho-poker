@@ -11,6 +11,7 @@ define(['Backbone'],
         
         render: function() {
             this.$el.append("Psycho!");
+            return this;
         }
     });
 
