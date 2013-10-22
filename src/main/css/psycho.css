@@ -1,0 +1,14 @@
+body {
+    margin:0px 0px;
+    padding:0px;
+}
+
+#card-rows {
+    background-color: #FFE;
+    margin: 0 auto;
+}
+#footer {
+    padding: 30px 0px 30px 0px;
+    background-color: #EFF;
+    text-align: center;
+}

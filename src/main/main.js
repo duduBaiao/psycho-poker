@@ -17,7 +17,7 @@ require.config({
     }
 });
 
-require(['Backbone', 'views/MainView'], function(Backbone, MainView) {
+require(['Backbone', 'views/MainView', 'utils/Utils'], function(Backbone, MainView) {
     
     new MainView({el: 'body'}).render();;
 });

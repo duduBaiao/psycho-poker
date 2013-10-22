@@ -28,7 +28,7 @@ require.config({
     }
 });
 
-require(['jasmine-html'],
+require(['jasmine-html', 'utils/Utils'],
     function(jasmine) {
     
     var jasmineEnv = jasmine.getEnv();

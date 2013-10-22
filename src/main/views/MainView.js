@@ -19,10 +19,15 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
         
         initialize: function() {
             this.currentGameIndex = -1;
+            
+            this.proxedOnResized = $.proxy(this.onResized, this);
+            $(window).bind('resize', this.proxedOnResized);
         },
         
         render: function() {
             this.$el.html(_.template(mainTemplate));
+            
+            this.adjustSize();
             
             this.startNextGame();
             
@@ -74,6 +79,21 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             else {
                 this.startNextGame();
             }
+        },
+        
+        adjustSize: function() {
+            var cardRowsHeight = Utils.screen.height() * 0.8;
+            this.$("#card-rows").outerHeight(cardRowsHeight);
+            this.$("#footer").outerHeight(Utils.screen.height() - cardRowsHeight);
+        },
+        
+        onResized: function() {
+            this.adjustSize();
+        },
+        
+        remove: function() {
+            $(window).unbind('resize', this.proxedOnResized);
+            Backbone.View.prototype.remove.call(this);
         }
     });
 
