@@ -1,6 +1,9 @@
 define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
+        'views/CardView',
         'text!templates/main.html'],
-        function(Backbone, CardsParser, CardsCollection, Game, mainTemplate) {
+        function(Backbone, CardsParser, CardsCollection, Game,
+                 CardView,
+                 mainTemplate) {
     
     var MainView = Backbone.View.extend({
         
@@ -22,10 +25,35 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             
             this.proxedOnResized = $.proxy(this.onResized, this);
             $(window).bind('resize', this.proxedOnResized);
+            
+            this.cards = new Array();
+        },
+        
+        createCards: function() {
+            
+            if (this.cards.length == 0) {
+                
+                for (var row=0; row < 2; row++) {
+                    for (var column=0; column < 5; column++) {
+                        
+                        var cardView = new CardView({row: row, column: column});
+                        
+                        this.cards.push(cardView);
+                        
+                        this.$cards.append(cardView.render().$el);
+                    }
+                }
+            }
         },
         
         render: function() {
             this.$el.html(_.template(mainTemplate));
+            
+            this.$cards = this.$("#cards");
+            this.$actionBtn = this.$("#action-btn");
+            this.$footer = this.$("#footer");
+            
+            this.createCards();
             
             this.adjustSize();
             
@@ -42,9 +70,9 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             this.currentGameIndex++;
             this.gameProcessed = false;
             
-            var cards = CardsParser.parse(this.games[this.currentGameIndex]);
+            var parsedCards = CardsParser.parse(this.games[this.currentGameIndex]);
             
-            this.currentGame = new Game(cards);
+            this.currentGame = new Game(parsedCards);
             
             this.displayCards();
         },
@@ -52,10 +80,10 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
         updateActionButton: function() {
             
             if (this.allGamesProcessed()) {
-                this.$("#action-btn").hide();
+                this.$actionBtn.hide();
             }
             else {
-                this.$("#action-btn").val(
+                this.$actionBtn.val(
                     !this.gameProcessed ?
                     "Descobrir a melhor mão":
                     "Carregar próximo jogo");
@@ -83,8 +111,8 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
         
         adjustSize: function() {
             var cardRowsHeight = Utils.screen.height() * 0.8;
-            this.$("#card-rows").outerHeight(cardRowsHeight);
-            this.$("#footer").outerHeight(Utils.screen.height() - cardRowsHeight);
+            this.$cards.outerHeight(cardRowsHeight);
+            this.$footer.outerHeight(Utils.screen.height() - cardRowsHeight);
         },
         
         onResized: function() {

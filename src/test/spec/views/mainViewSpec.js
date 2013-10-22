@@ -33,9 +33,9 @@ define(['views/MainView'],
         
         it("O botão de ação deve estar em seu estado inicial", function() {
             
-            expect(this.mainView.$("#action-btn")).toBeVisible();
+            expect(this.mainView.$actionBtn).toBeVisible();
             
-            expect(this.mainView.$("#action-btn").val()).toBe("Descobrir a melhor mão");
+            expect(this.mainView.$actionBtn.val()).toBe("Descobrir a melhor mão");
         });
         
         it("Deve detectar quando todos os jogos tiverem sido processados", function() {
@@ -43,7 +43,7 @@ define(['views/MainView'],
             for (var i=0; i < (this.gameCount -1); i++) {
                 
                 runs(function() {
-                    this.mainView.$("#action-btn").trigger("click");
+                    this.mainView.$actionBtn.trigger("click");
                 });
                 
                 waitsFor(function() {
@@ -51,7 +51,7 @@ define(['views/MainView'],
                 });
                 
                 runs(function() {
-                    this.mainView.$("#action-btn").trigger("click");
+                    this.mainView.$actionBtn.trigger("click");
                 });
                 
                 waitsFor(function() {
@@ -62,8 +62,13 @@ define(['views/MainView'],
             runs(function() {
                 expect(this.mainView.allGamesProcessed()).toBeTruthy();
                 
-                expect(this.mainView.$("#action-btn")).toBeHidden();
+                expect(this.mainView.$actionBtn).toBeHidden();
             });
+        });
+        
+        it("Devem haver 10 cartas na mesa", function() {
+            
+            expect(this.mainView.$(".card").length).toBe(10);
         });
     });
 });

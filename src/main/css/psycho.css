@@ -1,9 +1,13 @@
+* {
+    user-select: none;
+}
+
 body {
     margin:0px 0px;
     padding:0px;
 }
 
-#card-rows {
+#cards {
     background-color: #FFE;
     margin: 0 auto;
 }
@@ -11,4 +15,7 @@ body {
     padding: 30px 0px 30px 0px;
     background-color: #EFF;
     text-align: center;
+}
+
+.card {
 }
