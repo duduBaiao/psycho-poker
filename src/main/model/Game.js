@@ -3,9 +3,9 @@ define(['Backbone', 'utils/CardsCombinator', 'utils/HandEvaluator', 'model/Cards
 
     var Game = Backbone.Model.extend({
         
-        initialize: function(hand, deck) {
-            this.hand = hand;
-            this.deck = deck;
+        initialize: function(cards) {
+            this.hand = new CardsCollection(cards.fromHand());
+            this.deck = new CardsCollection(cards.fromDeck());
         },
         
         bestHand: function() {

@@ -1,5 +1,5 @@
-define(['utils/CardsParser', 'model/CardsCollection', 'model/Game'],
-    function(CardsParser, CardsCollection, Game) {
+define(['utils/CardsParser', 'model/Game'],
+    function(CardsParser, Game) {
     
     describe('Game', function() {
         
@@ -7,10 +7,7 @@ define(['utils/CardsParser', 'model/CardsCollection', 'model/Game'],
             
             var cards = CardsParser.parse(logLine);
             
-            var hand = new CardsCollection(cards.fromHand());
-            var deck = new CardsCollection(cards.fromDeck());
-            
-            var game = new Game(hand, deck);
+            var game = new Game(cards);
             
             return game.bestHand().name();
         }

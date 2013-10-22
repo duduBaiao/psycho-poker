@@ -1,0 +1,22 @@
+TableView
+    game
+        cards
+    
+    startNewGame()
+    
+        hideAllCards()
+    
+        displayCards() chamar tb no resize
+        
+        updateButton()
+    
+    showBestHand()
+    
+        getBestHand()
+    
+        hideUnusedCards() da mão
+        
+        moveDeckCards() mover as cartas do deck
+        
+        updateButton()
+    

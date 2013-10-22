@@ -18,6 +18,6 @@ require.config({
 });
 
 require(['Backbone', 'views/MainView'], function(Backbone, MainView) {
-    var mainView = new MainView();
-    mainView.render();
+    
+    new MainView({el: 'body'}).render();;
 });
