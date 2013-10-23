@@ -123,21 +123,27 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             this.$footer.outerHeight(Utils.screen.height() - cardRowsHeight);
             
             var cardHeight = cardRowsHeight * 0.4;
-            var cardWidth = cardHeight * 0.666;
+            var cardWidth = cardHeight * 0.74489796;
             
             var verticalSpace = cardRowsHeight * 0.2 / 3;
-            var horizontalSpace = cardWidth * 0.2;
+            var horizontalSpace = cardWidth * 0.1;
             
-            var leftMargin = (Utils.screen.width() - (5 * (cardWidth + horizontalSpace))) / 2.0;
+            var leftMargin = (Utils.screen.width() - (5 * cardWidth) - (4 * horizontalSpace)) / 2.0;
             
             _.each(this.cards, function(cardView) {
+                
                 cardView.$el.css({
                     height: cardHeight,
                     width: cardWidth,
                     transform: 'translate3d(' +
                         ((cardView.column * (cardWidth + horizontalSpace)) + leftMargin) + 'px,' +
                         ((cardView.row * (cardHeight + verticalSpace)) + verticalSpace) + 'px,' +
-                        '0px)'});
+                        '0px)',
+                    "background-size": (cardWidth * 13) + 'px',
+                    "background-position":
+                        (cardView.card.numberPosition * cardWidth * -1) + 'px ' +
+                        (cardView.card.suitPosition * cardHeight * -1) + 'px'
+                    });
             });
         },
         

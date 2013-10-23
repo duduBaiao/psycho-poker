@@ -17,9 +17,8 @@
 }
 
 .card {
-    background-color: #F00;
+    background-image:url(../img/full-deck.png);
     background-repeat:no-repeat;
-    background-size:100% auto;
     position: absolute;
     display: block;
 }

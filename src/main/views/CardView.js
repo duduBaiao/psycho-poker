@@ -8,8 +8,6 @@ define(['Backbone'],
             
             this.row = values.row;
             this.column = values.column;
-            
-            this.$el.css("background-image", "url(img/" + this.card.code + ".png)");
         },
         
         initialize: function(values) {
