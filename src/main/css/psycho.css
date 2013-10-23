@@ -2,9 +2,7 @@
     user-select: none;
 }
 
-body {
-    margin:0px 0px;
-    padding:0px;
+#table {
     background-image:url(../img/poker-table.jpg);
     background-size:100% auto;
     background-position:center;
