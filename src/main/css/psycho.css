@@ -5,17 +5,23 @@
 body {
     margin:0px 0px;
     padding:0px;
+    background-image:url(../img/poker-table.jpg);
+    background-size:100% auto;
+    background-position:center;
 }
 
-#cards {
-    background-color: #FFE;
+#cards-container {
     margin: 0 auto;
 }
 #footer {
-    padding: 30px 0px 30px 0px;
-    background-color: #EFF;
+    padding: 10px 0px 0px 0px;
     text-align: center;
 }
 
 .card {
+    background-color: #F00;
+    background-repeat:no-repeat;
+    background-size:100% auto;
+    position: absolute;
+    display: block;
 }

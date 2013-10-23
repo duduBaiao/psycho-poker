@@ -8,6 +8,10 @@ define(['Backbone', 'utils/CardsCombinator', 'utils/HandEvaluator', 'model/Cards
             this.deck = new CardsCollection(cards.fromDeck());
         },
         
+        allCards: function() {
+            return this.hand.models.slice(0).concat(this.deck.models);
+        },
+        
         bestHand: function() {
             var that = this;
             var bestRanking = -1;

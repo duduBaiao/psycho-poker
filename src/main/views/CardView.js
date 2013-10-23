@@ -3,23 +3,24 @@ define(['Backbone'],
     
     var CardView = Backbone.View.extend({
         
-        initialize: function(options) {
-            this.row = options.row;
-            this.column = options.column;
+        update: function(values) {
+            this.card = values.card;
             
-            this.state = CardView.STATE_REMOVED;
+            this.row = values.row;
+            this.column = values.column;
+            
+            this.$el.css("background-image", "url(img/" + this.card.code + ".png)");
+        },
+        
+        initialize: function(values) {
+            this.update(values);
         },
         
         render: function() {
             this.$el.addClass("card");
+            
             return this;
         }
-    },
-    {
-        STATE_REMOVED: "removed",
-        STATE_REMOVING: "removing",
-        STATE_POSITIONED: "positioned",
-        STATE_POSITIONING: "positioning",
     });
 
     return CardView;

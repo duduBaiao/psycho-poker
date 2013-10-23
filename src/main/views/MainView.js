@@ -26,36 +26,15 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             this.proxedOnResized = $.proxy(this.onResized, this);
             $(window).bind('resize', this.proxedOnResized);
             
-            this.cards = new Array();
-        },
-        
-        createCards: function() {
-            
-            if (this.cards.length == 0) {
-                
-                for (var row=0; row < 2; row++) {
-                    for (var column=0; column < 5; column++) {
-                        
-                        var cardView = new CardView({row: row, column: column});
-                        
-                        this.cards.push(cardView);
-                        
-                        this.$cards.append(cardView.render().$el);
-                    }
-                }
-            }
+            this.cards = new Array(10);
         },
         
         render: function() {
             this.$el.html(_.template(mainTemplate));
             
-            this.$cards = this.$("#cards");
+            this.$cardsContainer = this.$("#cards-container");
             this.$actionBtn = this.$("#action-btn");
             this.$footer = this.$("#footer");
-            
-            this.createCards();
-            
-            this.adjustSize();
             
             this.startNextGame();
             
@@ -74,7 +53,45 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             
             this.currentGame = new Game(parsedCards);
             
-            this.displayCards();
+            this.loadCards();
+            
+            this.adjustSizeAndPosition();
+            
+            this.updateActionButton();
+        },
+        
+        loadCards: function() {
+            var index = 0;
+            
+            var allCards = this.currentGame.allCards();
+            
+            for (var row=0; row < 2; row++) {
+                for (var column=0; column < 5; column++) {
+                    
+                    var cardView = this.cards[index];
+                    
+                    var cardValues = {card: allCards[index], row: row, column: column};
+                    
+                    if (!cardView) {
+                        cardView = new CardView(cardValues);
+                        this.cards[index] = cardView;
+                        
+                        this.$cardsContainer.append(cardView.render().$el);
+                    }
+                    else {
+                        cardView.update(cardValues);
+                    }
+                    
+                    index++;
+                }
+            }
+        },
+        
+        processGame: function() {
+            this.gameProcessed = true;
+            this.updateActionButton();
+            
+            // alert("O melhor jogo é um " + this.currentGame.bestHand().name());
         },
         
         updateActionButton: function() {
@@ -90,16 +107,6 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             }
         },
         
-        displayCards: function() {
-            
-            this.updateActionButton();
-        },
-        
-        processGame: function() {
-            this.gameProcessed = true;
-            this.updateActionButton();
-        },
-        
         executeAction: function() {
             if (!this.gameProcessed) {
                 this.processGame();
@@ -109,14 +116,33 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             }
         },
         
-        adjustSize: function() {
-            var cardRowsHeight = Utils.screen.height() * 0.8;
-            this.$cards.outerHeight(cardRowsHeight);
+        adjustSizeAndPosition: function() {
+            var cardRowsHeight = Utils.screen.height() * 0.85;
+            
+            this.$cardsContainer.outerHeight(cardRowsHeight);
             this.$footer.outerHeight(Utils.screen.height() - cardRowsHeight);
+            
+            var cardHeight = cardRowsHeight * 0.4;
+            var cardWidth = cardHeight * 0.666;
+            
+            var verticalSpace = cardRowsHeight * 0.2 / 3;
+            var horizontalSpace = cardWidth * 0.2;
+            
+            var leftMargin = (Utils.screen.width() - (5 * (cardWidth + horizontalSpace))) / 2.0;
+            
+            _.each(this.cards, function(cardView) {
+                cardView.$el.css({
+                    height: cardHeight,
+                    width: cardWidth,
+                    transform: 'translate3d(' +
+                        ((cardView.column * (cardWidth + horizontalSpace)) + leftMargin) + 'px,' +
+                        ((cardView.row * (cardHeight + verticalSpace)) + verticalSpace) + 'px,' +
+                        '0px)'});
+            });
         },
         
         onResized: function() {
-            this.adjustSize();
+            this.adjustSizeAndPosition();
         },
         
         remove: function() {
