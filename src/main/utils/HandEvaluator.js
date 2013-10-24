@@ -1,5 +1,5 @@
-define(['Backbone'],
-        function(Backbone) {
+define(['Backbone', 'model/Card'],
+        function(Backbone, Card) {
 
     var HandEvaluator = Backbone.Model.extend({},
     {
@@ -22,7 +22,8 @@ define(['Backbone'],
             
             if ((firstCard.number == "A") && (lastCard.number == "K")) {
                 
-                var newCard = _.clone(firstCard);
+                var newCard = new Card(firstCard.code);
+                
                 newCard.sequence = lastCard.sequence + 1;
                 
                 sortedCards.push(newCard);

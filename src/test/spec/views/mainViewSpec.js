@@ -60,7 +60,6 @@ define(['views/MainView'],
             }
             
             runs(function() {
-                expect(this.mainView.allGamesProcessed()).toBeTruthy();
                 
                 expect(this.mainView.$actionBtn).toBeHidden();
             });

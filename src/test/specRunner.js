@@ -41,10 +41,11 @@ require(['jasmine-html', 'utils/Utils'],
     var specs = [];
     
     specs.push('spec/model/cardSpec');
-    specs.push('spec/model/gameSpec');
+    specs.push('spec/model/cardsCollectionSpec');
     specs.push('spec/utils/cardsParserSpec');
     specs.push('spec/utils/cardsCombinatorSpec');
     specs.push('spec/utils/handEvaluatorSpec');
+    specs.push('spec/model/gameSpec');
     specs.push('spec/views/mainViewSpec');
     
     $(function(){

@@ -1,7 +1,9 @@
-define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
+define(['Backbone', 'utils/CardsParser', 'utils/HandEvaluator',
+        'model/CardsCollection', 'model/Game',
         'views/CardView',
         'text!templates/main.html'],
-        function(Backbone, CardsParser, CardsCollection, Game,
+        function(Backbone, CardsParser, HandEvaluator,
+                 CardsCollection, Game,
                  CardView,
                  mainTemplate) {
     
@@ -16,9 +18,11 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
                 "6C 9C 8C 2D 7C 2H TC 4C 9S AH",
                 "3D 5S 2H QD TD 6S KH 9H AD QH"],
         
+        HAND_ROW: 0,
+        DECK_ROW: 1,
         COLUMNS_COUNT: 5,
         
-        ANIMATION_TIME: 1.5,
+        ANIMATION_TIME: 1.2,
         
         events: {
             'click #action-btn': 'executeAction',
@@ -67,7 +71,7 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             
             var allCards = this.currentGame.allCards();
             
-            for (var row=0; row < 2; row++) {
+            for (var row=this.HAND_ROW; row <= this.DECK_ROW; row++) {
                 for (var column=0; column < this.COLUMNS_COUNT; column++) {
                     
                     var cardView = this.cards[index];
@@ -101,6 +105,8 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
         },
         
         repositionCards: function(animated) {
+            animated = animated && this.$el.is(":visible");
+            
             var cardRowsHeight = this.$cardsContainer.outerHeight();
             
             var cardHeight = cardRowsHeight * 0.4;
@@ -120,6 +126,14 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
                 
                 if (cardView.status == CardView.STATUS_HIDDEN) {
                     posX = Utils.screen.width() + 10;
+                }
+                else if (cardView.status == CardView.STATUS_DISCARDED) {
+                    if (cardView.row == that.HAND_ROW) {
+                        posY = (cardHeight + 10) * -1;
+                    }
+                    else {
+                        posY = Utils.screen.height() + 10;
+                    }
                 }
                 else if (cardView.status == CardView.STATUS_PROCESSED) {
                     posX = (((cardWidth + horizontalSpace) * (that.COLUMNS_COUNT - cardView.column)) + 10) * -1;
@@ -167,10 +181,49 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
         },
         
         processGame: function() {
+            var bestHand = this.currentGame.bestHand();
+            
+            var sortedCards = HandEvaluator.sortedByNumber(bestHand);
+            
+            bestHand = new CardsCollection(sortedCards);
+            
+            var that = this;
+            
+            var bestCardViews = [];
+            var discardedCardViews = [];
+            
+            _.each(this.cards, function(cardView) {
+                if (!bestHand.hasCard(cardView.card)) {
+                    cardView.status = CardView.STATUS_DISCARDED;
+                    
+                    discardedCardViews.push(cardView);
+                }
+                else {
+                    bestCardViews.push(cardView);
+                }
+            });
+            
             this.gameProcessed = true;
             this.updateActionButton();
             
-            // alert("O melhor jogo é um " + this.currentGame.bestHand().name());
+            this.repositionCards(true);
+            
+            setTimeout(function() {
+                
+                _.each(discardedCardViews, function(cardView) {
+                    cardView.status = CardView.STATUS_PROCESSED;
+                });
+                
+                that.repositionCards();
+                
+                _.each(bestCardViews, function(cardView) {
+                    cardView.row = that.HAND_ROW;
+                    cardView.column = bestHand.cardSequence(cardView.card);
+                });
+                
+                that.repositionCards(true);
+                
+            }, (this.ANIMATION_TIME + 0.1) * 1000);
         },
         
         allGamesProcessed: function() {
@@ -209,7 +262,7 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
                     
                     event.currentTarget.enabled = true;
                     
-                }, this.ANIMATION_TIME * 1000);
+                }, (this.ANIMATION_TIME + 0.1) * 1000);
             }
         },
         
