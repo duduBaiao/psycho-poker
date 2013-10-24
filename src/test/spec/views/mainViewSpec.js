@@ -8,6 +8,8 @@ define(['views/MainView'],
             this.mainView = new MainView().render();
             
             $("#sandbox").html(this.mainView.$el);
+            
+            this.mainView.$el.hide();
         });
         
         afterEach(function() {
@@ -32,8 +34,6 @@ define(['views/MainView'],
         });
         
         it("O botão de ação deve estar em seu estado inicial", function() {
-            
-            expect(this.mainView.$actionBtn).toBeVisible();
             
             expect(this.mainView.$actionBtn.val()).toBe("Descobrir a melhor mão");
         });

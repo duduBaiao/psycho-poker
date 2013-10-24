@@ -6,6 +6,8 @@
     background-image:url(../img/poker-table.jpg);
     background-size:100% auto;
     background-position:center;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 #cards-container {

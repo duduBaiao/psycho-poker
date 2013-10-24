@@ -16,6 +16,10 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
                 "6C 9C 8C 2D 7C 2H TC 4C 9S AH",
                 "3D 5S 2H QD TD 6S KH 9H AD QH"],
         
+        COLUMNS_COUNT: 5,
+        
+        ANIMATION_TIME: 1.5,
+        
         events: {
             'click #action-btn': 'executeAction',
         },
@@ -41,10 +45,6 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             return this;
         },
         
-        allGamesProcessed: function() {
-            return (this.currentGameIndex == (this.games.length -1));
-        },
-        
         startNextGame: function() {
             this.currentGameIndex++;
             this.gameProcessed = false;
@@ -58,6 +58,8 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             this.adjustSizeAndPosition();
             
             this.updateActionButton();
+            
+            this.showAllCards();
         },
         
         loadCards: function() {
@@ -66,7 +68,7 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             var allCards = this.currentGame.allCards();
             
             for (var row=0; row < 2; row++) {
-                for (var column=0; column < 5; column++) {
+                for (var column=0; column < this.COLUMNS_COUNT; column++) {
                     
                     var cardView = this.cards[index];
                     
@@ -82,9 +84,86 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
                         cardView.update(cardValues);
                     }
                     
+                    cardView.status = CardView.STATUS_HIDDEN;
+                    
                     index++;
                 }
             }
+        },
+        
+        adjustSizeAndPosition: function() {
+            var cardRowsHeight = Utils.screen.height() * 0.85;
+            
+            this.$cardsContainer.outerHeight(cardRowsHeight);
+            this.$footer.outerHeight(Utils.screen.height() - cardRowsHeight);
+            
+            this.repositionCards();
+        },
+        
+        repositionCards: function(animated) {
+            var cardRowsHeight = this.$cardsContainer.outerHeight();
+            
+            var cardHeight = cardRowsHeight * 0.4;
+            var cardWidth = cardHeight * 0.74489796;
+            
+            var verticalSpace = cardRowsHeight * 0.2 / 3;
+            var horizontalSpace = cardWidth * 0.1;
+            
+            var leftMargin = (Utils.screen.width() - (5 * cardWidth) - (4 * horizontalSpace)) / 2.0;
+            
+            var that = this;
+            
+            _.each(this.cards, function(cardView) {
+                
+                var posX = ((cardView.column * (cardWidth + horizontalSpace)) + leftMargin);
+                var posY = ((cardView.row * (cardHeight + verticalSpace)) + verticalSpace);
+                
+                if (cardView.status == CardView.STATUS_HIDDEN) {
+                    posX = Utils.screen.width() + 10;
+                }
+                else if (cardView.status == CardView.STATUS_PROCESSED) {
+                    posX = (((cardWidth + horizontalSpace) * (that.COLUMNS_COUNT - cardView.column)) + 10) * -1;
+                }
+                
+                cardView.$el.css({
+                    height: cardHeight,
+                    width: cardWidth,
+                    "transition-duration": (animated ? that.ANIMATION_TIME : 0) + "s",
+                    transform: 'translate3d(' + posX + 'px,' + posY + 'px, 0px)',
+                    "background-size": (cardWidth * 13) + 'px',
+                    "background-position":
+                        (cardView.card.numberPosition * cardWidth * -1) + 'px ' +
+                        (cardView.card.suitPosition * cardHeight * -1) + 'px'
+                    });
+            });
+        },
+        
+        onResized: function() {
+            this.adjustSizeAndPosition();
+        },
+        
+        updateAllCardsStatus: function(status) {
+            _.each(this.cards, function(cardView) {
+                cardView.status = status;
+            });
+        },
+        
+        showAllCards: function() {
+            this.updateAllCardsStatus(CardView.STATUS_VISIBLE);
+            
+            this.repositionCards(true);
+        },
+        
+        allCardsProcessed: function() {
+            this.updateAllCardsStatus(CardView.STATUS_PROCESSED);
+            
+            this.repositionCards(true);
+        },
+        
+        hideAllCards: function() {
+            this.updateAllCardsStatus(CardView.STATUS_HIDDEN);
+            
+            this.repositionCards();
         },
         
         processGame: function() {
@@ -92,6 +171,10 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             this.updateActionButton();
             
             // alert("O melhor jogo é um " + this.currentGame.bestHand().name());
+        },
+        
+        allGamesProcessed: function() {
+            return this.gameProcessed && (this.currentGameIndex == (this.games.length -1));
         },
         
         updateActionButton: function() {
@@ -107,48 +190,27 @@ define(['Backbone', 'utils/CardsParser', 'model/CardsCollection', 'model/Game',
             }
         },
         
-        executeAction: function() {
+        executeAction: function(event) {
+            
             if (!this.gameProcessed) {
                 this.processGame();
             }
             else {
-                this.startNextGame();
-            }
-        },
-        
-        adjustSizeAndPosition: function() {
-            var cardRowsHeight = Utils.screen.height() * 0.85;
-            
-            this.$cardsContainer.outerHeight(cardRowsHeight);
-            this.$footer.outerHeight(Utils.screen.height() - cardRowsHeight);
-            
-            var cardHeight = cardRowsHeight * 0.4;
-            var cardWidth = cardHeight * 0.74489796;
-            
-            var verticalSpace = cardRowsHeight * 0.2 / 3;
-            var horizontalSpace = cardWidth * 0.1;
-            
-            var leftMargin = (Utils.screen.width() - (5 * cardWidth) - (4 * horizontalSpace)) / 2.0;
-            
-            _.each(this.cards, function(cardView) {
+                event.currentTarget.enabled = false;
                 
-                cardView.$el.css({
-                    height: cardHeight,
-                    width: cardWidth,
-                    transform: 'translate3d(' +
-                        ((cardView.column * (cardWidth + horizontalSpace)) + leftMargin) + 'px,' +
-                        ((cardView.row * (cardHeight + verticalSpace)) + verticalSpace) + 'px,' +
-                        '0px)',
-                    "background-size": (cardWidth * 13) + 'px',
-                    "background-position":
-                        (cardView.card.numberPosition * cardWidth * -1) + 'px ' +
-                        (cardView.card.suitPosition * cardHeight * -1) + 'px'
-                    });
-            });
-        },
-        
-        onResized: function() {
-            this.adjustSizeAndPosition();
+                this.allCardsProcessed();
+                
+                var that = this;
+                
+                setTimeout(function() {
+                    that.hideAllCards();
+                    
+                    that.startNextGame();
+                    
+                    event.currentTarget.enabled = true;
+                    
+                }, this.ANIMATION_TIME * 1000);
+            }
         },
         
         remove: function() {

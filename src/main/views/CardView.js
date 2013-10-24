@@ -12,6 +12,8 @@ define(['Backbone'],
         
         initialize: function(values) {
             this.update(values);
+            
+            this.status = CardView.STATUS_VISIBLE;
         },
         
         render: function() {
@@ -19,6 +21,12 @@ define(['Backbone'],
             
             return this;
         }
+    },
+    {
+        STATUS_HIDDEN: "hidden",
+        STATUS_DISCARDED: "discarded",
+        STATUS_PROCESSED: "processed",
+        STATUS_VISIBLE: "visible",
     });
 
     return CardView;
