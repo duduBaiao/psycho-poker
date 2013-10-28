@@ -3,68 +3,30 @@ define(['Backbone'],
 
     var CardsCombinator = Backbone.Model.extend({},
     {
-        isNewCombination: function(combinations, sortedCards) {
-            var cards = sortedCards.join("");
+        generate: function(cards, numberOfCards) {
+            var i,
+            subI,
+            sub,
+            combinedCards = [],
+            nextCards;
             
-            for (var c=0; c < combinations.length; c++) {
-                if (combinations[c].join("") == cards) {
-                    return false;
-                }
-            }
-            return true;
-        },
-        
-        collectCombinations: function(
-            combinations,
-            numberOfCards,
-            totalDeck,
-            cards,
-            startIndex,
-            cardsUsed) {
-            
-            cardsUsed = cardsUsed || new Array();
-            startIndex = startIndex || 0;
-            
-            if (startIndex == cards.length) {
+            for (i = 0; i < cards.length; i++) {
                 
-                var sortedCards = cards.slice(0).sort();
-                
-                if (this.isNewCombination(combinations, sortedCards)) {
-                    combinations.push(sortedCards);
+                if (numberOfCards === 1){
+                    combinedCards.push([ cards[i] ]);
                 }
-            }
-            else {
-                for (var i=0; i < totalDeck; i++) {
+                else {
+                    sub = this.generate(cards.slice(i+1, cards.length), numberOfCards-1);
                     
-                    if (cardsUsed.indexOf(i) == -1) {
-                        
-                        cards[startIndex] = i;
-                        cardsUsed.push(i);
-                        
-                        this.collectCombinations(
-                            combinations,
-                            numberOfCards,
-                            totalDeck,
-                            cards,
-                            startIndex + 1,
-                            cardsUsed);
-                        
-                        cardsUsed.splice(cardsUsed.indexOf(i), 1);
+                    for (subI = 0; subI < sub.length; subI++) {
+                        nextCards = sub[subI];
+                        nextCards.unshift(cards[i]);
+                        combinedCards.push(nextCards);
                     }
                 }
             }
-        },
-        
-        generate: function(numberOfCards, totalDeck) {
-            var combinations = new Array();
             
-            this.collectCombinations(
-                combinations,
-                numberOfCards,
-                totalDeck,
-                new Array(numberOfCards));
-            
-            return combinations;
+            return combinedCards;
         }
     });
 

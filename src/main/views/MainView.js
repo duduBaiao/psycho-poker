@@ -96,7 +96,7 @@ define(['Backbone', 'utils/CardsParser', 'utils/HandEvaluator',
         },
         
         adjustSizeAndPosition: function() {
-            var cardRowsHeight = Utils.screen.height() * 0.85;
+            var cardRowsHeight = Utils.screen.height() * 0.80;
             
             this.$cardsContainer.outerHeight(cardRowsHeight);
             this.$footer.outerHeight(Utils.screen.height() - cardRowsHeight);

@@ -13,43 +13,30 @@ define(['Backbone', 'utils/CardsCombinator', 'utils/HandEvaluator', 'model/Cards
         },
         
         bestHand: function() {
+            var allHands = [];
+            
+            allHands.push(this.hand);
+            allHands.push(this.deck);
+            
             var that = this;
-            var bestRanking = -1;
-            var bestHand;
-            
-            var checkForBestGame = function(cardsCollection) {
-                var ranking = HandEvaluator.cardsRanking(cardsCollection);
-                
-                if (ranking > bestRanking) {
-                    bestRanking = ranking;
-                    bestHand = cardsCollection;
-                }
-            }
-            
-            checkForBestGame(this.hand);
-            checkForBestGame(this.deck);
             
             for (var i=1; i < this.hand.length; i++) {
                 
-                var combinations = CardsCombinator.generate(
-                    this.hand.length - i,
-                    this.hand.length);
+                var combinations = CardsCombinator.generate(this.hand.models, this.hand.length -i);
                 
-                _.each(combinations, function(combination) {
-                    
-                    var handCards = _.map(combination, function(cardIndex) {
-                        return that.hand.models[cardIndex];
-                    });
+                _.each(combinations, function(handCombination) {
                     
                     var deckCards = that.deck.models.slice(0, i);
                     
-                    var checkCards = handCards.concat(deckCards);
+                    var checkCards = handCombination.concat(deckCards);
                     
-                    checkForBestGame(new CardsCollection(checkCards));
+                    allHands.push(new CardsCollection(checkCards));
                 });
             }
             
-            return bestHand;
+            return _.last(_.sortBy(allHands, function(cardsCollection) {
+                             return HandEvaluator.cardsRanking(cardsCollection);
+                          }));
         }
     });
 
